@@ -9,6 +9,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Demo 123',
       theme: ThemeData(
+        textTheme: Theme.of(context).textTheme.apply(
+          fontFamily: 'Poppins',
+          bodyColor: Color(0xFF4A4A4A),
+          displayColor: Color(0xFF4A4A4A), 
+        ),
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: NavigationScreen(),
