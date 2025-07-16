@@ -44,7 +44,14 @@ class _LandingPageState extends State<LandingPage> {
                     child: H1(text: 'Todo List'),
                   ),
                 ),
-                _TaskList(taskList: taskList)
+                _TaskList(
+                  taskList: taskList,
+                  onTaskDoneChange: (task) {
+                    setState((){
+                      task.done = !task.done;
+                    });
+                  }
+                )
               ],
             )
           )
@@ -63,10 +70,11 @@ class _LandingPageState extends State<LandingPage> {
 
 class _TaskList extends StatelessWidget {
   const _TaskList({
-    required this.taskList,
+    required this.taskList, required this.onTaskDoneChange
   });
 
   final List<Task> taskList;
+  final void Function(Task task) onTaskDoneChange;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +83,7 @@ class _TaskList extends StatelessWidget {
         itemBuilder: (_,index) => _TaskItem(
           taskList[index],
           key: ValueKey(taskList[index].title),
-          onTap: () {},
+          onTap: () => onTaskDoneChange(taskList[index]),
         ), 
         separatorBuilder: (_, _) => SizedBox(height: 16,), 
         itemCount: taskList.length
@@ -106,7 +114,7 @@ class _TaskItem extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 30, vertical: 18),
             child: Row(
               children: [
-                Icon(Icons.check_box_outline_blank),
+                Icon(task.done ? Icons.check_box : Icons.check_box_outline_blank),
                 SizedBox(width: 10,),
                 Text(task.title)
               ],
