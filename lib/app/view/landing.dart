@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mykkrflutter/app/model/task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -10,11 +12,38 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   final taskList = <Task>[
-    Task('Wash clothes'),
-    Task('Do laundry'),
-    Task('Do homework'),
-    Task('Cooking for dinner')
+    
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  List<String> tasksToJson(List<Task> tasks) => 
+    tasks.map((task)=> json.encode(task.toJson())).toList();
+  
+  List<Task> taskfromJson(List<String> jsonList) => 
+    jsonList.map((taskJson)=> Task.fromJson(json.decode(taskJson))).toList();
+
+  List<Task> taskJsonToList(List<String> tasksJson) => tasksJson
+  .map((taskJson) => Task.fromJson(json.decode(taskJson))).toList();
+
+  Future<void> _loadTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksJson = prefs.getStringList('tasks') ?? [];
+    setState(() {
+      taskList.clear();
+      taskList.addAll(taskJsonToList(tasksJson));
+    });
+  }
+
+  Future<void> _saveTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final tasksJson = tasksToJson(taskList);
+    await prefs.setStringList(('tasks'), tasksJson);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +78,7 @@ class _LandingPageState extends State<LandingPage> {
                   onTaskDoneChange: (task) {
                     setState((){
                       task.done = !task.done;
+                      _saveTasks();
                     });
                   }
                 )
@@ -66,6 +96,7 @@ class _LandingPageState extends State<LandingPage> {
       builder: (_) => _NewTaskModal(onTaskCreated: (Task task){
           setState(() {
             taskList.add(task);
+            _saveTasks();
           });
         }),
       isScrollControlled: true
