@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mykkrflutter/app/model/task.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -8,6 +9,13 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  final taskList = <Task>[
+    Task('Wash clothes'),
+    Task('Do laundry'),
+    Task('Do homework'),
+    Task('Cooking for dinner')
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,30 +41,10 @@ class _LandingPageState extends State<LandingPage> {
                   padding: EdgeInsets.all(30),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      'To Do List', 
-                      style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+                    child: H1(text: 'Todo List'),
                   ),
                 ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 18),
-                    child: Row(
-                      children: [
-                        Icon(Icons.check_box_outline_blank),
-                        SizedBox(width: 10,),
-                        Text('Task Description')
-                      ],
-                    ),
-                  ),
-                )
+                _TaskList(taskList: taskList)
               ],
             )
           )
@@ -69,6 +57,82 @@ class _LandingPageState extends State<LandingPage> {
     showModalBottomSheet(
       context: context, 
       builder: (_) => _NewTaskModal(),
+    );
+  }
+}
+
+class _TaskList extends StatelessWidget {
+  const _TaskList({
+    required this.taskList,
+  });
+
+  final List<Task> taskList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.separated(
+        itemBuilder: (_,index) => _TaskItem(
+          taskList[index],
+          key: ValueKey(taskList[index].title),
+          onTap: () {},
+        ), 
+        separatorBuilder: (_, _) => SizedBox(height: 16,), 
+        itemCount: taskList.length
+      )
+    );
+  }
+}
+
+class _TaskItem extends StatelessWidget {
+  const _TaskItem(
+    this.task,{ super.key, this.onTap }
+  );
+
+  final Task task;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 18),
+            child: Row(
+              children: [
+                Icon(Icons.check_box_outline_blank),
+                SizedBox(width: 10,),
+                Text(task.title)
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class H1 extends StatelessWidget {
+  const H1({
+    super.key, required this.text
+  });
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text, 
+      style: Theme.of(context)
+        .textTheme
+        .bodyMedium!
+        .copyWith(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
 } 
@@ -88,7 +152,7 @@ class _NewTaskModal extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('New Task'),
+          H1(text: 'New Task'),
           SizedBox(height: 26,),
           TextField(
             controller: _controller,
