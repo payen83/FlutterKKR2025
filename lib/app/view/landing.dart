@@ -63,7 +63,12 @@ class _LandingPageState extends State<LandingPage> {
   void _showNewTaskModal(BuildContext context) async {
     showModalBottomSheet(
       context: context, 
-      builder: (_) => _NewTaskModal(),
+      builder: (_) => _NewTaskModal(onTaskCreated: (Task task){
+          setState(() {
+            taskList.add(task);
+          });
+        }),
+      isScrollControlled: true
     );
   }
 }
@@ -145,8 +150,15 @@ class H1 extends StatelessWidget {
   }
 } 
 
-class _NewTaskModal extends StatelessWidget {
-  _NewTaskModal();
+class _NewTaskModal extends StatefulWidget {
+  const _NewTaskModal({required this.onTaskCreated});
+  final void Function(Task task) onTaskCreated;
+
+  @override
+  State<_NewTaskModal> createState() => _NewTaskModalState();
+}
+
+class _NewTaskModalState extends State<_NewTaskModal> {
   final _controller = TextEditingController();
 
   @override
@@ -174,7 +186,13 @@ class _NewTaskModal extends StatelessWidget {
           ),
           SizedBox(height: 26,),
           ElevatedButton(
-            onPressed: (){}, 
+            onPressed: (){
+              if(_controller.text.isNotEmpty){
+                final task = Task(_controller.text);
+                widget.onTaskCreated(task);
+                Navigator.of(context).pop();
+              }
+            }, 
             child: Text('Submit'),
           )
         ],
