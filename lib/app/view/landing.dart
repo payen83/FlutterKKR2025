@@ -19,6 +19,7 @@ class _LandingPageState extends State<LandingPage> {
   void initState() {
     super.initState();
     _loadTasks();
+    
   }
 
   List<String> tasksToJson(List<Task> tasks) => 

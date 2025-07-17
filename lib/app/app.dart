@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mykkrflutter/app/view/home.dart';
 import 'package:mykkrflutter/app/view/landing.dart';
+import 'package:mykkrflutter/app/view/products.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -36,7 +37,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
     return Scaffold(
       body: [
         MyHomePage(title: 'MyKKR App'),
-        LandingPage()
+        LandingPage(),
+        ProductsPage()
       ][currentPageIndex],
       bottomNavigationBar: NavigationBar(
         destinations: [
@@ -45,6 +47,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ),
           NavigationDestination(
             icon: Icon(Icons.edit_square), label: 'Todo'
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.shopping_cart), label: 'Products'
           ),
         ],
         onDestinationSelected: (int index){
