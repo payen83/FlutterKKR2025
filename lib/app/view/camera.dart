@@ -27,7 +27,7 @@ class _CameraPageState extends State<CameraPage> {
             height: 200,
             child: imageFile != null
             ? Image.file(imageFile!, fit: BoxFit.cover)
-            : Image.asset('assets/images/onbording-image.png', fit: BoxFit.cover)
+            : Image.asset('assets/images/onboarding-image.png', fit: BoxFit.cover)
           ),
           ElevatedButton(
             onPressed: () async{
