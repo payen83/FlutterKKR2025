@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 
 import 'package:mykkrflutter/app/services/api.services.dart';
+import 'package:mykkrflutter/app/view/camera.dart';
 
 
 class ProductsPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _ProductsPageState extends State<ProductsPage> {
       if(result!=null){
         setState(() {
           productList = result?['products'];
-          print(productList);
+          // print(productList);
         });
       }
     } catch(e){
@@ -41,6 +42,16 @@ class _ProductsPageState extends State<ProductsPage> {
       appBar: AppBar(
        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
        title: Text('Products'),
+       actions: [
+        TextButton(
+          onPressed: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context){
+              return CameraPage();
+            }));
+          }, 
+          child: Text('Camera')
+        )
+       ],
       ),
       body: SingleChildScrollView(
         child: Column(
